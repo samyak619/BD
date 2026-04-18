@@ -164,45 +164,49 @@
     selectCard(cardGroup, index) {
       this.selectedCard = cardGroup;
 
-      gsap.to(cardGroup.position, {
-        x: 0, y: 0, z: 2.5,
-        duration: 0.8,
-        ease: 'power2.out',
-      });
-
-      gsap.to(cardGroup.rotation, {
+      gsap.to(cardGroup.scale, {
         x: 0, y: 0, z: 0,
-        duration: 0.8,
-        ease: 'power2.out',
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          cardGroup.position.set(0, 0, 2.5);
+          cardGroup.rotation.set(0, 0, 0);
+          gsap.to(cardGroup.scale, {
+            x: 1.1, y: 1.1, z: 1.1,
+            duration: 0.7,
+            ease: 'back.out(1.7)',
+          });
+        },
       });
 
       const caption = document.getElementById('gallery-caption');
       caption.textContent = CAPTIONS[index];
       gsap.killTweensOf(caption);
-      gsap.to(caption, { opacity: 1, duration: 0.5, delay: 0.5 });
+      gsap.to(caption, { opacity: 1, duration: 0.5, delay: 0.8 });
     },
 
     deselectCard(cardGroup) {
       const d = cardGroup.userData;
       this.selectedCard = null;
 
-      gsap.to(cardGroup.position, {
-        x: d.originalPos.x,
-        y: d.originalPos.y,
-        z: d.originalPos.z,
-        duration: 0.6,
-      });
-
-      gsap.to(cardGroup.rotation, {
-        x: d.originalRot.x,
-        y: d.originalRot.y,
-        z: d.originalRot.z,
-        duration: 0.6,
-      });
-
       const caption = document.getElementById('gallery-caption');
       gsap.killTweensOf(caption);
       gsap.to(caption, { opacity: 0, duration: 0.3 });
+
+      gsap.to(cardGroup.scale, {
+        x: 0, y: 0, z: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+          cardGroup.position.copy(d.originalPos);
+          cardGroup.rotation.set(d.originalRot.x, d.originalRot.y, d.originalRot.z);
+          gsap.to(cardGroup.scale, {
+            x: 1, y: 1, z: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+          });
+        },
+      });
     },
 
     update(dt, elapsed) {
