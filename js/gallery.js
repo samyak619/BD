@@ -11,8 +11,10 @@
   BD.sections.register('gallery', {
     group: null,
     cards: [],
-    raycaster: new THREE.Raycaster(),
+    cardGroups: [],
     selectedCard: null,
+    autoCycleIndex: 0,
+    autoPaused: false,
     clickHandler: null,
 
     init() {},
@@ -24,7 +26,10 @@
 
       this.group = new THREE.Group();
       this.cards = [];
+      this.cardGroups = [];
       this.selectedCard = null;
+      this.autoCycleIndex = 0;
+      this.autoPaused = false;
 
       this.createCards();
       BD.engine.scene.add(this.group);
@@ -42,11 +47,7 @@
         skip.onclick = () => BD.sections.goTo('wishes');
       }
 
-      gsap.delayedCall(60, () => {
-        if (BD.sections.current === 'gallery') {
-          BD.sections.goTo('wishes');
-        }
-      });
+      gsap.delayedCall(2, () => this.autoCycleNext());
     },
 
     createCards() {
@@ -99,12 +100,37 @@
           index: i,
           baseAngle: angle,
           radius: radius,
-          isFlipped: false,
           originalPos: cardGroup.position.clone(),
           originalRot: cardGroup.rotation.clone(),
         };
 
         this.group.add(cardGroup);
+        this.cardGroups.push(cardGroup);
+      });
+    },
+
+    autoCycleNext() {
+      if (BD.sections.current !== 'gallery' || this.autoPaused) return;
+
+      if (this.autoCycleIndex >= 4) {
+        gsap.delayedCall(2, () => {
+          if (BD.sections.current === 'gallery') {
+            BD.sections.goTo('wishes');
+          }
+        });
+        return;
+      }
+
+      const cardGroup = this.cardGroups[this.autoCycleIndex];
+      if (!cardGroup) return;
+
+      this.selectCard(cardGroup, this.autoCycleIndex);
+
+      gsap.delayedCall(5, () => {
+        if (BD.sections.current !== 'gallery') return;
+        this.deselectCard(cardGroup);
+        this.autoCycleIndex++;
+        gsap.delayedCall(1, () => this.autoCycleNext());
       });
     },
 
@@ -114,10 +140,12 @@
         -(e.clientY / window.innerHeight) * 2 + 1
       );
 
-      this.raycaster.setFromCamera(mouse, BD.engine.camera);
-      const intersects = this.raycaster.intersectObjects(this.cards);
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, BD.engine.camera);
+      const intersects = raycaster.intersectObjects(this.cards);
 
       if (intersects.length > 0) {
+        this.autoPaused = true;
         const card = intersects[0].object;
         const cardGroup = card.parent;
 
@@ -149,6 +177,7 @@
 
       const caption = document.getElementById('gallery-caption');
       caption.textContent = CAPTIONS[index];
+      gsap.killTweensOf(caption);
       gsap.to(caption, { opacity: 1, duration: 0.5, delay: 0.5 });
     },
 
@@ -171,6 +200,7 @@
       });
 
       const caption = document.getElementById('gallery-caption');
+      gsap.killTweensOf(caption);
       gsap.to(caption, { opacity: 0, duration: 0.3 });
     },
 
@@ -178,7 +208,7 @@
       BD.particles.updateAmbient(dt, 0.3);
 
       if (this.group && !this.selectedCard) {
-        this.group.rotation.y += 0.4 * dt;
+        this.group.rotation.y += 0.3 * dt;
       }
 
       if (this.group) {
@@ -203,6 +233,7 @@
       }
 
       this.cards = [];
+      this.cardGroups = [];
       this.selectedCard = null;
 
       const caption = document.getElementById('gallery-caption');
