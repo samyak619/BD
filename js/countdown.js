@@ -32,7 +32,7 @@
 
       const geo = new THREE.ShapeGeometry(heartShape);
       const mat = new THREE.MeshBasicMaterial({
-        color: 0xf4c87a,
+        color: 0xff6b8a,
         transparent: true,
         opacity: 0.25,
         side: THREE.DoubleSide,

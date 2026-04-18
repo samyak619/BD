@@ -36,7 +36,13 @@
       this.clickHandler = (e) => this.onClick(e);
       window.addEventListener('click', this.clickHandler);
 
-      gsap.delayedCall(15, () => {
+      const skip = document.getElementById('gallery-skip');
+      if (skip) {
+        skip.style.display = 'block';
+        skip.onclick = () => BD.sections.goTo('wishes');
+      }
+
+      gsap.delayedCall(60, () => {
         if (BD.sections.current === 'gallery') {
           BD.sections.goTo('wishes');
         }
@@ -60,7 +66,7 @@
         loader.load('assets/images/' + photo, (texture) => {
           const frontMat = new THREE.MeshBasicMaterial({
             map: texture,
-            side: THREE.FrontSide,
+            side: THREE.DoubleSide,
           });
           const front = new THREE.Mesh(frontGeo, frontMat);
           front.userData.cardIndex = i;
@@ -79,7 +85,7 @@
 
         const borderGeo = new THREE.PlaneGeometry(1.9, 2.5);
         const borderMat = new THREE.MeshBasicMaterial({
-          color: 0xf4c87a,
+          color: 0xff6b8a,
           transparent: true,
           opacity: 0.3,
           side: THREE.DoubleSide,
@@ -136,7 +142,7 @@
       });
 
       gsap.to(cardGroup.rotation, {
-        x: 0, y: Math.PI, z: 0,
+        x: 0, y: 0, z: 0,
         duration: 0.8,
         ease: 'power2.out',
       });
@@ -172,7 +178,7 @@
       BD.particles.updateAmbient(dt, 0.3);
 
       if (this.group && !this.selectedCard) {
-        this.group.rotation.y += 0.15 * dt;
+        this.group.rotation.y += 0.4 * dt;
       }
 
       if (this.group) {
@@ -201,6 +207,9 @@
 
       const caption = document.getElementById('gallery-caption');
       caption.style.opacity = '0';
+
+      const skip = document.getElementById('gallery-skip');
+      if (skip) skip.style.display = 'none';
 
       return Promise.resolve();
     },

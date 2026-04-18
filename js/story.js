@@ -68,7 +68,7 @@
           textEl.textContent = CHAPTERS[index].text;
           const chapterColor = index === 0 ? 'rgba(150,180,210,0.9)'
             : index === 1 ? 'rgba(220,190,150,0.9)'
-            : 'rgba(244,200,122,0.95)';
+            : 'rgba(255,107,138,0.95)';
           textEl.style.color = chapterColor;
           gsap.to(textEl, { opacity: 1, duration: 0.6 });
         },
@@ -106,7 +106,7 @@
       if (hint) hint.style.opacity = p > 0.05 ? '0' : '0.4';
 
       if (p >= 0.98) {
-        BD.sections.goTo('universe');
+        BD.sections.goTo('gallery');
       }
     },
 

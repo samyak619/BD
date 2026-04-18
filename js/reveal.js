@@ -22,7 +22,7 @@
       const colors = new Float32Array(count * 3);
       const velocities = [];
       const palette = [
-        new THREE.Color(0xf4c87a),
+        new THREE.Color(0xff6b8a),
         new THREE.Color(0xff6b8a),
         new THREE.Color(0xffd700),
         new THREE.Color(0xff9a9e),
@@ -95,7 +95,7 @@
       const positions = new Float32Array(count * 3);
       const colors = new Float32Array(count * 3);
       const palette = [
-        new THREE.Color(0xf4c87a),
+        new THREE.Color(0xff6b8a),
         new THREE.Color(0xff6b8a),
         new THREE.Color(0xffd700),
         new THREE.Color(0xffffff),

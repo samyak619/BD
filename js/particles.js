@@ -20,10 +20,10 @@
 
       const palettes = {
         warm: [
-          new THREE.Color(0xf4c87a),
-          new THREE.Color(0xf0a0a0),
+          new THREE.Color(0xff6b8a),
+          new THREE.Color(0xff8fab),
           new THREE.Color(0xffd1dc),
-          new THREE.Color(0xffe4b5),
+          new THREE.Color(0xf48fb1),
         ],
         storm: [
           new THREE.Color(0x6688aa),
@@ -99,10 +99,10 @@
       if (!this.ambient) return;
       const palettes = {
         warm: [
-          new THREE.Color(0xf4c87a),
-          new THREE.Color(0xf0a0a0),
+          new THREE.Color(0xff6b8a),
+          new THREE.Color(0xff8fab),
           new THREE.Color(0xffd1dc),
-          new THREE.Color(0xffe4b5),
+          new THREE.Color(0xf48fb1),
         ],
         storm: [
           new THREE.Color(0x6688aa),
@@ -134,7 +134,7 @@
 
       const mat = new THREE.PointsMaterial({
         size: 0.04,
-        color: 0xf4c87a,
+        color: 0xff6b8a,
         transparent: true,
         opacity: 0.6,
         blending: THREE.AdditiveBlending,
@@ -182,7 +182,7 @@
       this.trail.geo.attributes.opacity.needsUpdate = true;
 
       const isHearts = this.trailMode === 'hearts';
-      this.trail.points.material.color.set(isHearts ? 0xff6b8a : 0xf4c87a);
+      this.trail.points.material.color.set(isHearts ? 0xff4081 : 0xff6b8a);
     },
 
     removeAmbient() {

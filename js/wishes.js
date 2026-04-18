@@ -53,7 +53,7 @@
       this.clickHandler = (e) => this.onClick(e);
       window.addEventListener('click', this.clickHandler);
 
-      gsap.delayedCall(30, () => {
+      gsap.delayedCall(15, () => {
         const skip = document.getElementById('wishes-skip');
         if (skip && BD.sections.current === 'wishes') {
           skip.style.display = 'block';
@@ -66,7 +66,7 @@
       for (let i = 0; i < 24; i++) {
         const geo = new THREE.SphereGeometry(0.15, 16, 16);
         const mat = new THREE.MeshBasicMaterial({
-          color: 0xf4c87a,
+          color: 0xff6b8a,
           transparent: true,
           opacity: 0.7,
         });
@@ -74,17 +74,17 @@
 
         const phi = Math.acos(1 - 2 * (i + 0.5) / 24);
         const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-        const radius = 4;
+        const radius = 2.5;
 
         mesh.position.set(
           radius * Math.sin(phi) * Math.cos(theta),
-          radius * Math.sin(phi) * Math.sin(theta) * 0.6,
+          radius * Math.sin(phi) * Math.sin(theta) * 0.5,
           radius * Math.cos(phi)
         );
 
         const glowGeo = new THREE.SphereGeometry(0.25, 16, 16);
         const glowMat = new THREE.MeshBasicMaterial({
-          color: 0xf4c87a,
+          color: 0xff6b8a,
           transparent: true,
           opacity: 0.15,
           side: THREE.BackSide,
@@ -143,7 +143,7 @@
       burstGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       const burstMat = new THREE.PointsMaterial({
         size: 0.04,
-        color: 0xffd700,
+        color: 0xff4081,
         transparent: true,
         opacity: 1,
         blending: THREE.AdditiveBlending,
@@ -194,7 +194,7 @@
         onComplete: () => {
           wishText.textContent = WISHES[lantern.userData.index];
           gsap.to(wishText, { opacity: 1, duration: 0.5 });
-          gsap.to(wishText, { opacity: 0, duration: 0.5, delay: 3 });
+          gsap.to(wishText, { opacity: 0, duration: 0.5, delay: 5 });
         },
       });
 
@@ -222,8 +222,7 @@
       });
 
       if (this.group) {
-        this.group.rotation.y += 0.05 * dt;
-        this.group.rotation.y += (BD.engine.mouse.nx * 0.3 - this.group.rotation.y) * 0.01;
+        this.group.rotation.y += 0.2 * dt;
       }
     },
 
