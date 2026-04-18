@@ -1,9 +1,28 @@
 (function () {
   const BD = window.BD;
 
+  function createHeartTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ff2d55';
+    ctx.beginPath();
+    ctx.moveTo(32, 56);
+    ctx.bezierCurveTo(12, 40, 2, 26, 2, 16);
+    ctx.bezierCurveTo(2, 6, 10, 2, 18, 2);
+    ctx.bezierCurveTo(24, 2, 30, 6, 32, 12);
+    ctx.bezierCurveTo(34, 6, 40, 2, 46, 2);
+    ctx.bezierCurveTo(54, 2, 62, 6, 62, 16);
+    ctx.bezierCurveTo(62, 26, 52, 40, 32, 56);
+    ctx.fill();
+    return new THREE.CanvasTexture(canvas);
+  }
+
   BD.sections.register('finale', {
-    heart: null,
-    photoMeshes: [],
+    hearts: [],
+    heartTexture: null,
 
     init() {
       document.querySelector('#finale-ui .replay-btn').addEventListener('click', () => {
@@ -13,10 +32,11 @@
 
     enter() {
       BD.particles.createAmbient(200, 'warm');
+      BD.particles.createPetals(20);
       BD.sections.showUI('finale-ui');
 
-      this.createHeart();
-      this.createOrbitingPhotos();
+      this.heartTexture = createHeartTexture();
+      this.createFloatingHearts();
 
       const finalText = document.querySelector('#finale-ui .final-text');
       gsap.fromTo(finalText, { opacity: 0, y: 20 }, {
@@ -27,93 +47,77 @@
       gsap.fromTo(btn, { opacity: 0 }, { opacity: 1, duration: 1, delay: 3 });
     },
 
-    createHeart() {
-      const shape = new THREE.Shape();
-      shape.moveTo(0, 0.3);
-      shape.bezierCurveTo(0, 0.5, -0.15, 0.6, -0.3, 0.6);
-      shape.bezierCurveTo(-0.6, 0.6, -0.6, 0.2, -0.6, 0.2);
-      shape.bezierCurveTo(-0.6, -0.1, -0.3, -0.35, 0, -0.6);
-      shape.bezierCurveTo(0.3, -0.35, 0.6, -0.1, 0.6, 0.2);
-      shape.bezierCurveTo(0.6, 0.2, 0.6, 0.6, 0.3, 0.6);
-      shape.bezierCurveTo(0.15, 0.6, 0, 0.5, 0, 0.3);
+    createFloatingHearts() {
+      this.hearts = [];
+      const count = BD.engine.isMobile ? 15 : 25;
 
-      const geo = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.2, bevelEnabled: true,
-        bevelThickness: 0.05, bevelSize: 0.05, bevelSegments: 3,
-      });
-      const mat = new THREE.MeshBasicMaterial({
-        color: 0xff6b8a,
-        transparent: true,
-        opacity: 0.6,
-      });
-
-      this.heart = new THREE.Mesh(geo, mat);
-      this.heart.position.z = 1;
-      this.heart.scale.setScalar(1.5);
-      BD.engine.scene.add(this.heart);
-    },
-
-    createOrbitingPhotos() {
-      const loader = new THREE.TextureLoader();
-      const photos = ['photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg'];
-      this.photoMeshes = [];
-
-      photos.forEach((photo, i) => {
-        loader.load('assets/images/' + photo, (texture) => {
-          const geo = new THREE.PlaneGeometry(0.8, 1);
-          const mat = new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            opacity: 0.6,
-            side: THREE.DoubleSide,
-          });
-          const mesh = new THREE.Mesh(geo, mat);
-          mesh.userData = {
-            angle: (i / photos.length) * Math.PI * 2,
-            radius: 3.5,
-            speed: 0.3,
-            yOffset: Math.sin(i) * 0.5,
-          };
-          BD.engine.scene.add(mesh);
-          this.photoMeshes.push(mesh);
+      for (let i = 0; i < count; i++) {
+        const size = 0.2 + Math.random() * 0.4;
+        const geo = new THREE.PlaneGeometry(size, size);
+        const mat = new THREE.MeshBasicMaterial({
+          map: this.heartTexture,
+          transparent: true,
+          opacity: 0.4 + Math.random() * 0.4,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
         });
-      });
+
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(
+          (Math.random() - 0.5) * 14,
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 6
+        );
+        mesh.userData = {
+          speedY: 0.2 + Math.random() * 0.4,
+          speedX: (Math.random() - 0.5) * 0.2,
+          rotSpeed: (Math.random() - 0.5) * 1.5,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: 0.5 + Math.random() * 1.5,
+          pulseSpeed: 1 + Math.random() * 2,
+          baseScale: size,
+        };
+
+        BD.engine.scene.add(mesh);
+        this.hearts.push(mesh);
+      }
     },
 
     update(dt, elapsed) {
       BD.particles.updateAmbient(dt, 0.2);
+      BD.particles.updatePetals(dt, elapsed);
 
-      if (this.heart) {
-        const scale = 1.5 + Math.sin(elapsed * 1.5) * 0.1;
-        this.heart.scale.setScalar(scale);
-        this.heart.rotation.y += 0.2 * dt;
-      }
+      this.hearts.forEach(h => {
+        const d = h.userData;
+        h.position.y += d.speedY * dt;
+        h.position.x += (d.speedX + Math.sin(elapsed * d.wobbleSpeed + d.wobble) * 0.15) * dt;
+        h.rotation.z += d.rotSpeed * dt;
 
-      this.photoMeshes.forEach(mesh => {
-        const d = mesh.userData;
-        d.angle += d.speed * dt;
-        mesh.position.x = Math.cos(d.angle) * d.radius;
-        mesh.position.z = Math.sin(d.angle) * d.radius;
-        mesh.position.y = d.yOffset + Math.sin(elapsed + d.angle) * 0.3;
-        mesh.lookAt(BD.engine.camera.position);
+        const pulse = 1 + Math.sin(elapsed * d.pulseSpeed) * 0.1;
+        h.scale.setScalar(pulse);
+
+        if (h.position.y > 7) {
+          h.position.y = -7;
+          h.position.x = (Math.random() - 0.5) * 14;
+        }
       });
     },
 
     exit() {
-      if (this.heart) {
-        BD.engine.scene.remove(this.heart);
-        this.heart.geometry.dispose();
-        this.heart.material.dispose();
-        this.heart = null;
-      }
+      BD.particles.removePetals();
 
-      this.photoMeshes.forEach(mesh => {
+      this.hearts.forEach(mesh => {
         BD.engine.scene.remove(mesh);
         mesh.geometry.dispose();
-        if (mesh.material.map) mesh.material.map.dispose();
         mesh.material.dispose();
       });
-      this.photoMeshes = [];
+      this.hearts = [];
+
+      if (this.heartTexture) {
+        this.heartTexture.dispose();
+        this.heartTexture = null;
+      }
 
       return Promise.resolve();
     },
