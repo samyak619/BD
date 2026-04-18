@@ -21,64 +21,89 @@
 
   function createCakeTexture() {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 300;
+    canvas.width = 300;
+    canvas.height = 350;
     const ctx = canvas.getContext('2d');
 
+    const plateY = 310;
+    ctx.fillStyle = '#aaa';
+    ctx.beginPath();
+    ctx.ellipse(150, plateY, 140, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ccc';
+    ctx.beginPath();
+    ctx.ellipse(150, plateY - 3, 140, 18, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#c9785d';
+    ctx.fillRect(35, 210, 230, 100);
     ctx.fillStyle = '#d4956a';
     ctx.beginPath();
-    ctx.moveTo(30, 280);
-    ctx.lineTo(30, 180);
-    ctx.lineTo(226, 180);
-    ctx.lineTo(226, 280);
-    ctx.closePath();
+    ctx.ellipse(150, 210, 115, 20, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#c9785d';
+    ctx.beginPath();
+    ctx.ellipse(150, 310, 115, 20, 0, 0, Math.PI, 0);
     ctx.fill();
 
     ctx.fillStyle = '#e8a87c';
+    ctx.fillRect(25, 140, 250, 75);
+    ctx.fillStyle = '#edba92';
     ctx.beginPath();
-    ctx.moveTo(20, 180);
-    ctx.lineTo(20, 120);
-    ctx.lineTo(236, 120);
-    ctx.lineTo(236, 180);
-    ctx.closePath();
+    ctx.ellipse(150, 140, 125, 20, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#e8a87c';
+    ctx.beginPath();
+    ctx.ellipse(150, 215, 125, 20, 0, 0, Math.PI, 0);
     ctx.fill();
 
     ctx.fillStyle = '#ffb6c1';
-    ctx.fillRect(15, 115, 226, 15);
-    ctx.fillRect(25, 175, 206, 12);
+    ctx.fillRect(20, 130, 260, 15);
+    ctx.beginPath();
+    ctx.ellipse(150, 130, 130, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.fillStyle = '#fff';
-    for (let i = 0; i < 8; i++) {
-      const x = 40 + i * 25;
+    for (let i = 0; i < 10; i++) {
+      const x = 30 + i * 25 + 10;
       ctx.beginPath();
-      ctx.arc(x, 115, 8, Math.PI, 0);
+      ctx.arc(x, 143, 10, Math.PI, 0);
       ctx.fill();
     }
 
     ctx.fillStyle = '#ff6b8a';
-    ctx.fillRect(15, 108, 226, 10);
+    ctx.fillRect(25, 200, 250, 8);
+    ctx.beginPath();
+    ctx.ellipse(150, 200, 125, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    const candleColors = ['#ff6b8a', '#ffb6c1', '#ff4081'];
-    const candleX = [80, 128, 176];
+    const candleColors = ['#ff6b8a', '#ffb6c1', '#ff4081', '#f48fb1', '#ff6b8a'];
+    const candleX = [70, 110, 150, 190, 230];
     candleX.forEach((x, i) => {
       ctx.fillStyle = candleColors[i];
-      ctx.fillRect(x - 4, 60, 8, 50);
+      ctx.fillRect(x - 4, 65, 8, 65);
 
       ctx.fillStyle = '#ffd700';
       ctx.beginPath();
-      ctx.ellipse(x, 52, 6, 12, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, 55, 7, 14, 0, 0, Math.PI * 2);
       ctx.fill();
-
-      ctx.fillStyle = '#ff8c00';
+      ctx.fillStyle = '#ffaa00';
       ctx.beginPath();
-      ctx.ellipse(x, 55, 3, 7, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, 58, 4, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.ellipse(x, 52, 2, 4, 0, 0, Math.PI * 2);
       ctx.fill();
     });
 
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 18px sans-serif';
+    ctx.font = 'bold 22px Playfair Display, serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Happy 24th!', 128, 160);
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 4;
+    ctx.fillText('Happy 24th!', 150, 185);
+    ctx.shadowBlur = 0;
 
     return new THREE.CanvasTexture(canvas);
   }
@@ -199,14 +224,14 @@
 
     createCake() {
       const texture = createCakeTexture();
-      const geo = new THREE.PlaneGeometry(3, 3.5);
+      const geo = new THREE.PlaneGeometry(2.5, 2.9);
       const mat = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
         side: THREE.DoubleSide,
       });
       this.cakeMesh = new THREE.Mesh(geo, mat);
-      this.cakeMesh.position.set(0, -0.5, 2);
+      this.cakeMesh.position.set(0, -0.3, 3);
       BD.engine.scene.add(this.cakeMesh);
 
       gsap.fromTo(this.cakeMesh.scale, { x: 0, y: 0, z: 0 }, {
@@ -376,7 +401,7 @@
       BD.particles.updatePetals(dt, elapsed);
 
       if (this.cakeMesh) {
-        this.cakeMesh.position.y = -0.5 + Math.sin(elapsed * 1.5) * 0.05;
+        this.cakeMesh.position.y = -0.3 + Math.sin(elapsed * 1.5) * 0.05;
       }
 
       this.balloons.forEach(b => {

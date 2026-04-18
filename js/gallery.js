@@ -169,10 +169,12 @@
         duration: 0.3,
         ease: 'power2.in',
         onComplete: () => {
-          cardGroup.position.set(0, 0, 2.5);
+          this.group.remove(cardGroup);
+          BD.engine.scene.add(cardGroup);
+          cardGroup.position.set(0, 0, 3);
           cardGroup.rotation.set(0, 0, 0);
           gsap.to(cardGroup.scale, {
-            x: 1.1, y: 1.1, z: 1.1,
+            x: 1.2, y: 1.2, z: 1.2,
             duration: 0.7,
             ease: 'back.out(1.7)',
           });
@@ -198,6 +200,8 @@
         duration: 0.3,
         ease: 'power2.in',
         onComplete: () => {
+          BD.engine.scene.remove(cardGroup);
+          this.group.add(cardGroup);
           cardGroup.position.copy(d.originalPos);
           cardGroup.rotation.set(d.originalRot.x, d.originalRot.y, d.originalRot.z);
           gsap.to(cardGroup.scale, {
