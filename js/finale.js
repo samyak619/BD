@@ -99,7 +99,7 @@
       this.phase = 'balloons';
 
       const prompt = document.getElementById('cake-prompt');
-      gsap.to(prompt, { opacity: 0, duration: 0.3 });
+      gsap.to(prompt, { opacity: 0, duration: 0.3, onComplete: () => { prompt.style.display = 'none'; } });
 
       const cake = document.getElementById('cake-container');
       cake.classList.add('cut');
