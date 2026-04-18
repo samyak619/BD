@@ -39,6 +39,7 @@
 
     enter() {
       BD.particles.createAmbient(200, 'warm');
+      BD.particles.createPetals(25);
       BD.sections.showUI('wishes-ui');
 
       this.group = new THREE.Group();
@@ -142,11 +143,13 @@
       const burstGeo = new THREE.BufferGeometry();
       burstGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       const burstMat = new THREE.PointsMaterial({
-        size: 0.04,
+        size: 0.06,
+        map: BD.particles.circleMap,
         color: 0xff4081,
         transparent: true,
         opacity: 1,
         blending: THREE.AdditiveBlending,
+        depthWrite: false,
       });
 
       const burst = new THREE.Points(burstGeo, burstMat);
@@ -220,6 +223,7 @@
 
     update(dt, elapsed) {
       BD.particles.updateAmbient(dt, 0.3);
+      BD.particles.updatePetals(dt, elapsed);
 
       this.lanterns.forEach(l => {
         if (!l.userData.revealed) {
@@ -244,6 +248,7 @@
         this.group = null;
       }
 
+      BD.particles.removePetals();
       this.lanterns = [];
       return Promise.resolve();
     },

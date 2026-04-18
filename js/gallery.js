@@ -21,6 +21,7 @@
 
     enter() {
       BD.particles.createAmbient(300, 'warm');
+      BD.particles.createPetals(30);
       BD.audio.switchTo('mommae');
       BD.sections.showUI('gallery-ui');
 
@@ -206,6 +207,7 @@
 
     update(dt, elapsed) {
       BD.particles.updateAmbient(dt, 0.3);
+      BD.particles.updatePetals(dt, elapsed);
 
       if (this.group && !this.selectedCard) {
         this.group.rotation.y += 0.3 * dt;
@@ -238,6 +240,8 @@
 
       const caption = document.getElementById('gallery-caption');
       caption.style.opacity = '0';
+
+      BD.particles.removePetals();
 
       const skip = document.getElementById('gallery-skip');
       if (skip) skip.style.display = 'none';

@@ -14,6 +14,7 @@
       this.burstParticles();
       this.startConfetti();
       this.animateText();
+      BD.particles.createPetals(40);
     },
 
     burstParticles() {
@@ -52,7 +53,8 @@
       geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const mat = new THREE.PointsMaterial({
-        size: 0.06,
+        size: 0.08,
+        map: BD.particles.circleMap,
         vertexColors: true,
         transparent: true,
         opacity: 1,
@@ -125,7 +127,8 @@
       geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const mat = new THREE.PointsMaterial({
-        size: 0.07,
+        size: 0.09,
+        map: BD.particles.circleMap,
         vertexColors: true,
         transparent: true,
         opacity: 0.9,
@@ -166,6 +169,7 @@
     },
 
     update(dt, elapsed) {
+      BD.particles.updatePetals(dt, elapsed);
       if (this.confetti) {
         const pos = this.confetti.geo.attributes.position.array;
         for (let i = 0; i < this.confetti.count; i++) {
@@ -191,6 +195,7 @@
         this.confetti = null;
       }
 
+      BD.particles.removePetals();
       const ui = document.getElementById('reveal-ui');
       return new Promise(r => {
         gsap.to(ui, { opacity: 0, duration: 0.8, onComplete: r });

@@ -2,7 +2,7 @@
   const BD = window.BD;
 
   // TODO: Change back to '2026-05-01T00:00:00+05:30' before deploying!
-  const BIRTHDAY = new Date('2026-04-18T00:00:00+05:30');
+  const BIRTHDAY = new Date('2026-04-19T00:00:00+05:30');
 
   BD.sections = {
     current: null,

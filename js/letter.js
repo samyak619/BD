@@ -11,6 +11,7 @@
 
     enter() {
       BD.particles.createAmbient(150, 'warm');
+      BD.particles.createPetals(20);
       BD.particles.trailMode = 'hearts';
       BD.sections.showUI('letter-ui');
 
@@ -142,8 +143,9 @@
       });
     },
 
-    update(dt) {
+    update(dt, elapsed) {
       BD.particles.updateAmbient(dt, 0.2);
+      BD.particles.updatePetals(dt, elapsed);
 
       if (this.envelope) {
         this.envelope.group.position.y += Math.sin(Date.now() * 0.001) * 0.001;
@@ -152,6 +154,7 @@
 
     exit() {
       BD.particles.trailMode = 'warm';
+      BD.particles.removePetals();
       document.body.style.overflow = 'hidden';
 
       if (this.envelope) {
