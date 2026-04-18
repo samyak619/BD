@@ -353,16 +353,125 @@
     }
 
     #cake-prompt {
-      position: fixed;
-      top: 15%;
       font-family: 'Playfair Display', serif;
       font-size: clamp(1rem, 3vw, 1.5rem);
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
       pointer-events: none;
       display: none;
+      margin-bottom: 1.5rem;
       animation: pulse 2s infinite;
     }
+
+    #cake-container {
+      position: relative;
+      width: 200px;
+      height: 220px;
+      cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><line x1="4" y1="28" x2="22" y2="10" stroke="%23ccc" stroke-width="3" stroke-linecap="round"/><polygon points="20,12 30,2 32,4 24,14" fill="%23999"/></svg>') 4 28, pointer;
+      display: none;
+      pointer-events: auto;
+    }
+
+    #cake-container .cake-layer2 {
+      position: absolute;
+      bottom: 20px; left: 10px;
+      width: 180px; height: 70px;
+      background: linear-gradient(to bottom, #d4956a, #c17f55);
+      border-radius: 8px 8px 12px 12px;
+    }
+
+    #cake-container .cake-frosting-mid {
+      position: absolute;
+      bottom: 88px; left: 8px;
+      width: 184px; height: 12px;
+      background: #ffb6c1;
+      border-radius: 4px;
+    }
+
+    #cake-container .cake-layer1 {
+      position: absolute;
+      bottom: 90px; left: 20px;
+      width: 160px; height: 55px;
+      background: linear-gradient(to bottom, #e8a87c, #d4956a);
+      border-radius: 8px 8px 4px 4px;
+    }
+
+    #cake-container .cake-frosting-top {
+      position: absolute;
+      bottom: 143px; left: 16px;
+      width: 168px; height: 10px;
+      background: #ff6b8a;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(255, 107, 138, 0.5);
+    }
+
+    #cake-container .cake-top {
+      position: absolute;
+      bottom: 145px; left: 18px;
+      width: 164px; height: 14px;
+      background: #ffb6c1;
+      border-radius: 8px 8px 0 0;
+    }
+
+    #cake-container .cake-top::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 14px;
+      background: repeating-conic-gradient(#fff 0% 25%, transparent 0% 50%) 0 0 / 16px 14px;
+      opacity: 0.4;
+      border-radius: 8px 8px 0 0;
+    }
+
+    #cake-container .cake-plate {
+      position: absolute;
+      bottom: 8px; left: -5px;
+      width: 210px; height: 24px;
+      background: linear-gradient(to bottom, #ddd, #aaa);
+      border-radius: 50%;
+    }
+
+    #cake-container .cake-text {
+      position: absolute;
+      bottom: 45px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    #cake-container .cake-candle {
+      position: absolute;
+      bottom: 158px; left: 50%;
+      transform: translateX(-50%);
+      width: 6px; height: 35px;
+      background: linear-gradient(to right, #ff6b8a, #ff4081);
+      border-radius: 2px 2px 0 0;
+    }
+    #cake-container .cake-candle.c2 { left: 30%; }
+    #cake-container .cake-candle.c3 { left: 70%; }
+    #cake-container .cake-candle.c4 { left: 20%; }
+    #cake-container .cake-candle.c5 { left: 80%; }
+
+    #cake-container .flame {
+      position: absolute;
+      top: -14px; left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 14px;
+      background: radial-gradient(ellipse at bottom, #ffd700, #ff8c00 50%, transparent 70%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: flicker 0.3s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 1; }
+      100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 0.85; }
+    }
+
+    #cake-container.cut .cake-candle,
+    #cake-container.cut .cake-top,
+    #cake-container.cut .cake-frosting-top { display: none; }
 
     #finale-ui .final-text {
       font-family: 'Playfair Display', serif;
@@ -446,6 +555,20 @@
 
   <div id="finale-ui">
     <div id="cake-prompt">Tap the cake to cut it!</div>
+    <div id="cake-container">
+      <div class="cake-candle"><div class="flame"></div></div>
+      <div class="cake-candle c2"><div class="flame"></div></div>
+      <div class="cake-candle c3"><div class="flame"></div></div>
+      <div class="cake-candle c4"><div class="flame"></div></div>
+      <div class="cake-candle c5"><div class="flame"></div></div>
+      <div class="cake-top"></div>
+      <div class="cake-frosting-top"></div>
+      <div class="cake-layer1"></div>
+      <div class="cake-frosting-mid"></div>
+      <div class="cake-layer2"></div>
+      <div class="cake-plate"></div>
+      <div class="cake-text">Happy 24th!</div>
+    </div>
     <div class="final-text">From someone who's thinking about you</div>
     <button class="replay-btn">Experience it again</button>
   </div>
