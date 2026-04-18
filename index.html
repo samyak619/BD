@@ -352,6 +352,18 @@
       z-index: 10;
     }
 
+    #cake-prompt {
+      position: fixed;
+      top: 15%;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      pointer-events: none;
+      display: none;
+      animation: pulse 2s infinite;
+    }
+
     #finale-ui .final-text {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1rem, 3vw, 1.8rem);
@@ -433,6 +445,7 @@
   </div>
 
   <div id="finale-ui">
+    <div id="cake-prompt">Tap the cake to cut it!</div>
     <div class="final-text">From someone who's thinking about you</div>
     <button class="replay-btn">Experience it again</button>
   </div>
