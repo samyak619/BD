@@ -16,6 +16,7 @@
     onTap() {
       if (BD.sections.current !== 'splash') return;
 
+      BD.audio.unlock();
       BD.audio.play('melikeyuh');
 
       const splash = document.getElementById('splash');

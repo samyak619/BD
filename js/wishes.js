@@ -188,13 +188,19 @@
       });
 
       const wishText = document.getElementById('wish-text');
+      gsap.killTweensOf(wishText);
       gsap.to(wishText, {
         opacity: 0,
         duration: 0.2,
         onComplete: () => {
           wishText.textContent = WISHES[lantern.userData.index];
-          gsap.to(wishText, { opacity: 1, duration: 0.5 });
-          gsap.to(wishText, { opacity: 0, duration: 0.5, delay: 5 });
+          gsap.fromTo(wishText, { opacity: 0 }, {
+            opacity: 1,
+            duration: 0.5,
+            onComplete: () => {
+              gsap.to(wishText, { opacity: 0, duration: 0.5, delay: 10 });
+            },
+          });
         },
       });
 

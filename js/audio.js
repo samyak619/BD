@@ -15,9 +15,17 @@
       Object.values(this.tracks).forEach(t => {
         t.loop = true;
         t.volume = 0;
+        t.preload = 'auto';
+        t.load();
       });
 
       this.btn.addEventListener('click', () => this.toggle());
+    },
+
+    unlock() {
+      Object.values(this.tracks).forEach(t => {
+        t.play().then(() => { t.pause(); t.currentTime = 0; }).catch(() => {});
+      });
     },
 
     play(trackName) {
@@ -29,11 +37,17 @@
       }
 
       this.currentTrack = track;
-      track.play().catch(() => {});
-      this.fadeIn(track);
-      this.isPlaying = true;
-      this.btn.style.display = 'flex';
-      this.btn.textContent = '\u266B';
+      const tryPlay = () => {
+        track.play().then(() => {
+          this.fadeIn(track);
+          this.isPlaying = true;
+          this.btn.style.display = 'flex';
+          this.btn.textContent = '\u266B';
+        }).catch(() => {
+          setTimeout(tryPlay, 500);
+        });
+      };
+      tryPlay();
     },
 
     switchTo(trackName) {
