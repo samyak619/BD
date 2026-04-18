@@ -52,6 +52,14 @@
 
       this.clickHandler = (e) => this.onClick(e);
       window.addEventListener('click', this.clickHandler);
+
+      gsap.delayedCall(30, () => {
+        const skip = document.getElementById('wishes-skip');
+        if (skip && BD.sections.current === 'wishes') {
+          skip.style.display = 'block';
+          skip.onclick = () => BD.sections.goTo('letter');
+        }
+      });
     },
 
     createLanterns() {
